@@ -11,6 +11,8 @@ class Document(models.Model):
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     file_hash = models.CharField(max_length=64, blank=True)
     file_size = models.IntegerField(default=0)
+    ipfs_hash = models.CharField(max_length=100, blank=True)
+    blockchain_tx = models.CharField(max_length=100, blank=True)
 
 
     def save(self, *args, **kwargs):
@@ -26,6 +28,6 @@ class Document(models.Model):
         for chunk in self.file.chunks():
             hash_sha256.update(chunk)
         return hash_sha256.hexdigest()
-    
+
     def __str__(self):
         return f"{self.title} - {self.uploaded_at.strftime('%Y-%m-%d %H:%M')}"
