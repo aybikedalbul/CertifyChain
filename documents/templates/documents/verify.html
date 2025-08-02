@@ -1,47 +1,207 @@
 {% extends 'documents/base.html' %}
 
-{% block title %}Belge Doğrula - CertifyChain{% endblock %}
+{% block title %}Belge Doğrula - CertifyChain Security{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title mb-0">Belge Doğrula</h3>
+    <div class="col-lg-8">
+        <!-- Header Section -->
+        <div class="text-center mb-5 animate-fade-in">
+            <div class="position-relative d-inline-block">
+                <i class="bi bi-shield-check text-gradient" style="font-size: 4rem;"></i>
+                <div class="position-absolute top-0 start-0 w-100 h-100 animate-pulse" style="background: radial-gradient(circle, rgba(79, 172, 254, 0.3) 0%, transparent 70%);"></div>
             </div>
-            <div class="card-body">
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i>
-                    <strong>Bilgi:</strong> Bu sayfada yüklediğiniz belgenin daha önce sisteme yüklenip yüklenmediğini kontrol edebilirsiniz.
+            <h1 class="text-gradient mt-3 mb-3">Belge Güvenlik Doğrulaması</h1>
+            <p class="text-muted fs-5">
+                Blockchain teknolojisi ile belgenizin orijinalliğini doğrulayın
+            </p>
+        </div>
+
+        <!-- Security Info Cards -->
+        <div class="row mb-5">
+            <div class="col-md-6 mb-3">
+                <div class="glass-card h-100 p-4 animate-fade-in">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 50px; height: 50px; background: rgba(79, 172, 254, 0.2); border: 2px solid #4facfe;">
+                            <i class="bi bi-fingerprint" style="color: #4facfe; font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-light mb-1">Hash Tabanlı Doğrulama</h5>
+                            <small class="text-muted">SHA-256 algoritması kullanılır</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        Belgenizin dijital parmak izi hesaplanarak veritabanındaki kayıtlarla karşılaştırılır.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="glass-card h-100 p-4 animate-fade-in">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 50px; height: 50px; background: rgba(102, 126, 234, 0.2); border: 2px solid #667eea;">
+                            <i class="bi bi-clock-history" style="color: #667eea; font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-light mb-1">Zaman Damgası</h5>
+                            <small class="text-muted">Yükleme tarihi korunur</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">
+                        Belgenizin ne zaman sisteme eklendiği bilgisi kayıt altına alınır.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Form -->
+        <div class="glass-card animate-fade-in">
+            <div class="card-body p-5">
+                <!-- Security Badge -->
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center px-4 py-2 rounded-pill" 
+                         style="background: rgba(79, 172, 254, 0.1); border: 1px solid rgba(79, 172, 254, 0.3);">
+                        <i class="bi bi-shield-lock me-2" style="color: #4facfe;"></i>
+                        <span class="text-light fw-semibold">Güvenli Doğrulama Alanı</span>
+                    </div>
+                </div>
+
+                <!-- Info Alert -->
+                <div class="mb-4 p-4 rounded-3" style="background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%); border: 1px solid rgba(79, 172, 254, 0.2);">
+                    <div class="d-flex align-items-start">
+                        <div class="me-3 mt-1">
+                            <i class="bi bi-info-circle" style="color: #4facfe; font-size: 1.2rem;"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-light mb-2">Doğrulama Süreci Nasıl Çalışır?</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.8rem;">1</div>
+                                        <small class="text-muted">Dosya hash'i hesaplanır</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.8rem;">2</div>
+                                        <small class="text-muted">Veritabanında aranır</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.8rem;">3</div>
+                                        <small class="text-muted">Sonuç gösterilir</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.8rem;">4</div>
+                                        <small class="text-muted">Detaylar sunulur</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     
-                    <div class="mb-3">
-                        <label for="{{ form.file.id_for_label }}" class="form-label">{{ form.file.label }}</label>
+                    <!-- File Upload Section -->
+                    <div class="mb-4">
+                        <label for="{{ form.file.id_for_label }}" class="form-label">
+                            <i class="bi bi-file-earmark-lock me-2"></i>{{ form.file.label }}
+                        </label>
                         {{ form.file }}
                         {% if form.file.errors %}
-                            <div class="text-danger">
+                            <div class="text-danger mt-2">
                                 {% for error in form.file.errors %}
-                                    <small>{{ error }}</small>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        <small>{{ error }}</small>
+                                    </div>
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <div class="form-text">{{ form.file.help_text }}</div>
+                        
+                        <!-- Security Notice -->
+                        <div class="mt-3 p-3 rounded" style="background: rgba(245, 87, 108, 0.1); border: 1px solid rgba(245, 87, 108, 0.2);">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-shield-exclamation me-2" style="color: #f5576c;"></i>
+                                <div>
+                                    <span class="fw-semibold text-light">Güvenlik Bildirimi</span>
+                                    <p class="text-muted small mb-0 mt-1">
+                                        Yüklediğiniz dosya sadece hash hesaplaması için kullanılır ve sunucuda saklanmaz.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-circle"></i> Belgeyi Doğrula
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-web3">
+                            <i class="bi bi-search me-2"></i>
+                            Güvenlik Doğrulaması Başlat
                         </button>
-                        <a href="{% url 'documents:document_list' %}" class="btn btn-outline-secondary">
-                            İptal
+                        <a href="{% url 'documents:document_list' %}" class="btn btn-outline-web3">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Belge Listesine Dön
                         </a>
                     </div>
                 </form>
             </div>
         </div>
+
+        <!-- Security Features -->
+        <div class="row mt-5">
+            <div class="col-md-3 mb-3">
+                <div class="text-center p-3 h-100" style="background: rgba(79, 172, 254, 0.05); border-radius: 15px; border: 1px solid rgba(79, 172, 254, 0.1);">
+                    <i class="bi bi-eye-slash" style="font-size: 2rem; color: #4facfe; margin-bottom: 10px;"></i>
+                    <h6 class="text-light mb-1">Gizlilik</h6>
+                    <small class="text-muted">Dosya içeriği görülmez</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-center p-3 h-100" style="background: rgba(102, 126, 234, 0.05); border-radius: 15px; border: 1px solid rgba(102, 126, 234, 0.1);">
+                    <i class="bi bi-lightning" style="font-size: 2rem; color: #667eea; margin-bottom: 10px;"></i>
+                    <h6 class="text-light mb-1">Hızlı</h6>
+                    <small class="text-muted">Anında sonuç</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-center p-3 h-100" style="background: rgba(245, 87, 108, 0.05); border-radius: 15px; border: 1px solid rgba(245, 87, 108, 0.1);">
+                    <i class="bi bi-shield-check" style="font-size: 2rem; color: #f5576c; margin-bottom: 10px;"></i>
+                    <h6 class="text-light mb-1">Güvenilir</h6>
+                    <small class="text-muted">Kriptografik hash</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="text-center p-3 h-100" style="background: rgba(120, 200, 255, 0.05); border-radius: 15px; border: 1px solid rgba(120, 200, 255, 0.1);">
+                    <i class="bi bi-clock" style="font-size: 2rem; color: #78c8ff; margin-bottom: 10px;"></i>
+                    <h6 class="text-light mb-1">Zaman Damgası</h6>
+                    <small class="text-muted">Kayıt tarihi korunur</small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Security animation for the main shield icon
+    const securityIcon = document.querySelector('.bi-shield-check.text-gradient');
+    if (securityIcon) {
+        setInterval(() => {
+            securityIcon.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                securityIcon.style.transform = 'scale(1)';
+            }, 300);
+        }, 3000);
+    }
+});
+</script>
 {% endblock %}

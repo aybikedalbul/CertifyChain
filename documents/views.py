@@ -72,3 +72,11 @@ def verify_document(request):
 def document_list(request):
     documents = Document.objects.filter(uploaded_by=request.user).order_by('-uploaded_at')
     return render(request, 'documents/list.html', {'documents': documents})
+
+def home(request):
+    # Landing page için istatistikler
+    context = {
+        'page_title': 'CertifyChain - Web3 Belge Yönetim Sistemi',
+        'is_home_page': True,
+    }
+    return render(request, 'documents/home.html', context)

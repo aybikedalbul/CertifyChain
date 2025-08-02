@@ -1,27 +1,82 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CertifyChain{% endblock %}</title>
+    <meta name="description" content="CertifyChain - Blockchain tabanlı belge doğrulama sistemi">
+    <meta name="keywords" content="blockchain, IPFS, belge doğrulama, web3">
+    <meta name="author" content="CertifyChain">
+    
+    <title>{% block title %}CertifyChain - Web3 Belge Yönetimi{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/web3-style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'documents:document_list' %}">CertifyChain</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="{% url 'documents:document_list' %}">Belgelerim</a>
-                <a class="nav-link" href="{% url 'documents:upload_document' %}">Belge Yükle</a>
-                <a class="nav-link" href="{% url 'documents:verify_document' %}">Belge Doğrula</a>
+            <a class="navbar-brand glow" href="{% url 'documents:home' %}">
+                <i class="bi bi-link-45deg me-2"></i>CertifyChain
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if is_home_page %}
+                    <!-- Home Page Navbar -->
+                    <div class="navbar-nav ms-auto">
+                        <a class="nav-link" href="{% url 'documents:verify_document' %}">
+                            <i class="bi bi-shield-check me-1"></i>Belge Doğrula
+                        </a>
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Giriş Yap
+                        </a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" class="btn btn-web3 ms-2">
+                            <i class="bi bi-person-plus me-1"></i>Kayıt Ol
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- Dashboard Navbar -->
+                    <div class="navbar-nav ms-auto">
+                        <a class="nav-link" href="{% url 'documents:home' %}">
+                            <i class="bi bi-house me-1"></i>Ana Sayfa
+                        </a>
+                        <a class="nav-link" href="{% url 'documents:document_list' %}">
+                            <i class="bi bi-folder me-1"></i>Belgelerim
+                        </a>
+                        <a class="nav-link" href="{% url 'documents:upload_document' %}">
+                            <i class="bi bi-cloud-upload me-1"></i>Belge Yükle
+                        </a>
+                        <a class="nav-link" href="{% url 'documents:verify_document' %}">
+                            <i class="bi bi-shield-check me-1"></i>Belge Doğrula
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container" style="margin-top: 120px; padding-bottom: 50px;">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate-fade-in" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -32,6 +87,117 @@
         {% endblock %}
     </div>
 
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="glass-card modal-content border-0">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-gradient">
+                        <i class="bi bi-shield-lock me-2"></i>Güvenli Giriş
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label text-light">
+                                <i class="bi bi-person me-2"></i>Kullanıcı Adı
+                            </label>
+                            <input type="text" class="form-control" placeholder="Kullanıcı adınızı girin">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-light">
+                                <i class="bi bi-lock me-2"></i>Şifre
+                            </label>
+                            <input type="password" class="form-control" placeholder="Şifrenizi girin">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-web3">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                            </button>
+                            <p class="text-center text-muted mt-3 mb-0">
+                                Hesabınız yok mu? 
+                                <a href="#" class="text-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#signupModal">Kayıt Olun</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="glass-card modal-content border-0">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-gradient">
+                        <i class="bi bi-person-plus me-2"></i>Hesap Oluştur
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label text-light">
+                                <i class="bi bi-person me-2"></i>Ad Soyad
+                            </label>
+                            <input type="text" class="form-control" placeholder="Adınızı ve soyadınızı girin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light">
+                                <i class="bi bi-envelope me-2"></i>E-posta
+                            </label>
+                            <input type="email" class="form-control" placeholder="E-posta adresinizi girin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light">
+                                <i class="bi bi-person-circle me-2"></i>Kullanıcı Adı
+                            </label>
+                            <input type="text" class="form-control" placeholder="Kullanıcı adınızı seçin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light">
+                                <i class="bi bi-lock me-2"></i>Şifre
+                            </label>
+                            <input type="password" class="form-control" placeholder="Güçlü bir şifre oluşturun">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-light">
+                                <i class="bi bi-lock-fill me-2"></i>Şifre Tekrar
+                            </label>
+                            <input type="password" class="form-control" placeholder="Şifrenizi tekrar girin">
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms">
+                            <label class="form-check-label text-light" for="agreeTerms">
+                                <small>
+                                    <i class="bi bi-shield-check me-1"></i>
+                                    Kullanım şartlarını ve gizlilik politikasını kabul ediyorum
+                                </small>
+                            </label>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-web3">
+                                <i class="bi bi-rocket-takeoff me-2"></i>Hesap Oluştur
+                            </button>
+                            <p class="text-center text-muted mt-3 mb-0">
+                                Zaten hesabınız var mı? 
+                                <a href="#" class="text-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Giriş Yapın</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{% static 'js/web3-animations.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

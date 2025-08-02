@@ -1,65 +1,200 @@
 {% extends 'documents/base.html' %}
 
-{% block title %}Belgelerim - CertifyChain{% endblock %}
+{% block title %}Belgelerim - CertifyChain Dashboard{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Belgelerim</h2>
-            <a href="{% url 'documents:upload_document' %}" class="btn btn-primary">
-                <i class="bi bi-plus"></i> Yeni Belge Yükle
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
+            <div>
+                <h1 class="text-gradient mb-2">
+                    <i class="bi bi-folder2-open me-3"></i>Belge Koleksiyonum
+                </h1>
+                <p class="text-muted">IPFS ağında güvenle saklanan belgeleriniz</p>
+            </div>
+            <a href="{% url 'documents:upload_document' %}" class="btn btn-web3 glow">
+                <i class="bi bi-plus-circle me-2"></i>Yeni Belge Ekle
             </a>
         </div>
 
         {% if documents %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Başlık</th>
-                            <th>Dosya</th>
-                            <th>Hash</th>
-                            <th>Boyut</th>
-                            <th>IPFS Linki</th>
-                            <th>Yükleme Tarihi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for document in documents %}
-                        <tr>
-                            <td>{{ document.title }}</td>
-                            <td>{{ document.file.name|slice:"10:" }}</td>
-                            <td>
-                                <code class="text-muted">{{ document.file_hash|slice:":16" }}...</code>
-                            </td>
-                            <td>
+            <!-- Stats Overview -->
+            <div class="row mb-5">
+                <div class="col-md-4 mb-3">
+                    <div class="glass-card p-4 text-center animate-fade-in">
+                        <i class="bi bi-files" style="font-size: 2.5rem; color: #4facfe;"></i>
+                        <h3 class="text-light mt-3 mb-1">{{ documents|length }}</h3>
+                        <p class="text-muted mb-0">Toplam Belge</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="glass-card p-4 text-center animate-fade-in">
+                        <i class="bi bi-shield-check" style="font-size: 2.5rem; color: #667eea;"></i>
+                        <h3 class="text-light mt-3 mb-1">100%</h3>
+                        <p class="text-muted mb-0">Güvenlik</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="glass-card p-4 text-center animate-fade-in">
+                        <i class="bi bi-globe2" style="font-size: 2.5rem; color: #f5576c;"></i>
+                        <h3 class="text-light mt-3 mb-1">∞</h3>
+                        <p class="text-muted mb-0">Global Erişim</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Grid -->
+            <div class="row">
+                {% for document in documents %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="glass-card h-100 animate-fade-in">
+                        <div class="card-body p-4">
+                            <!-- Document Header -->
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    {% if document.file.name|slice:"-4:" == ".pdf" %}
+                                        <i class="bi bi-file-earmark-pdf text-danger me-3" style="font-size: 1.8rem;"></i>
+                                    {% elif document.file.name|slice:"-4:" == ".doc" or document.file.name|slice:"-5:" == ".docx" %}
+                                        <i class="bi bi-file-earmark-word text-primary me-3" style="font-size: 1.8rem;"></i>
+                                    {% elif document.file.name|slice:"-4:" == ".jpg" or document.file.name|slice:"-4:" == ".png" or document.file.name|slice:"-5:" == ".jpeg" %}
+                                        <i class="bi bi-file-earmark-image text-success me-3" style="font-size: 1.8rem;"></i>
+                                    {% else %}
+                                        <i class="bi bi-file-earmark text-info me-3" style="font-size: 1.8rem;"></i>
+                                    {% endif %}
+                                    <div>
+                                        <h5 class="text-light mb-1">{{ document.title|truncatechars:20 }}</h5>
+                                        <small class="text-muted">{{ document.file.name|slice:"10:" }}</small>
+                                    </div>
+                                </div>
+                                {% if document.ipfs_hash %}
+                                    <span class="badge rounded-pill" style="background: rgba(79, 172, 254, 0.2); color: #4facfe; border: 1px solid rgba(79, 172, 254, 0.3);">
+                                        <i class="bi bi-shield-check me-1"></i>Yüklendi
+                                    </span>
+                                {% else %}
+                                    <span class="badge rounded-pill" style="background: rgba(245, 87, 108, 0.2); color: #f5576c; border: 1px solid rgba(245, 87, 108, 0.3);">
+                                        <i class="bi bi-exclamation-circle me-1"></i>Beklemede
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Document Info -->
+                            <div class="mb-3">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <i class="bi bi-hdd text-muted"></i>
+                                        <div class="small text-muted mt-1">{{ document.file_size|filesizeformat }}</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <i class="bi bi-calendar text-muted"></i>
+                                        <div class="small text-muted mt-1">{{ document.uploaded_at|date:"d/m/Y" }}</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <i class="bi bi-clock text-muted"></i>
+                                        <div class="small text-muted mt-1">{{ document.uploaded_at|date:"H:i" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hash Display -->
+                            <div class="mb-3">
+                                <label class="small text-muted d-block mb-1">
+                                    <i class="bi bi-fingerprint me-1"></i>SHA-256 Hash
+                                </label>
+                                <div class="ipfs-hash">
+                                    {{ document.file_hash|slice:":16" }}...
+                                </div>
+                            </div>
+
+                            <!-- IPFS Hash Display -->
+                            {% if document.ipfs_hash %}
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1">
+                                        <i class="bi bi-globe2 me-1"></i>IPFS Hash
+                                    </label>
+                                    <div class="ipfs-hash">
+                                        {{ document.ipfs_hash|slice:":16" }}...
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2">
                                 {% if document.ipfs_hash %}
                                     <a href="https://gateway.pinata.cloud/ipfs/{{ document.ipfs_hash }}" 
                                        target="_blank" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i> IPFS'te Görüntüle
+                                       class="btn btn-outline-web3">
+                                        <i class="bi bi-eye me-2"></i>IPFS'te Görüntüle
                                     </a>
                                 {% else %}
-                                    <span class="text-muted">Yüklenmedi</span>
+                                    <button class="btn btn-outline-secondary" disabled>
+                                        <i class="bi bi-hourglass-split me-2"></i>IPFS'e Yükleniyor...
+                                    </button>
                                 {% endif %}
-                            </td>
-                            <td>{{ document.file_size|filesizeformat }}</td>
-                            <td>{{ document.uploaded_at|date:"d/m/Y H:i" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
+
+            <!-- Pagination would go here if needed -->
+            
         {% else %}
-            <div class="text-center py-5">
-                <h4 class="text-muted">Henüz belge yüklemediniz</h4>
-                <p class="text-muted">İlk belgenizi yüklemek için aşağıdaki butona tıklayın.</p>
-                <a href="{% url 'documents:upload_document' %}" class="btn btn-primary">
-                    İlk Belgenizi Yükleyin
-                </a>
+            <!-- Empty State -->
+            <div class="text-center py-5 animate-fade-in">
+                <div class="glass-card p-5 mx-auto" style="max-width: 500px;">
+                    <div class="mb-4">
+                        <i class="bi bi-cloud-upload" style="font-size: 4rem; color: var(--glow-color);"></i>
+                    </div>
+                    <h3 class="text-gradient mb-3">İlk Belgenizi Yükleyin</h3>
+                    <p class="text-muted mb-4">
+                        Henüz hiç belge yüklemediniz. IPFS ağının gücünü keşfetmek için 
+                        ilk belgenizi yükleyerek başlayın.
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'documents:upload_document' %}" class="btn btn-web3">
+                            <i class="bi bi-rocket-takeoff me-2"></i>İlk Belgenizi Yükleyin
+                        </a>
+                        <a href="{% url 'documents:verify_document' %}" class="btn btn-outline-web3">
+                            <i class="bi bi-shield-check me-2"></i>Belge Doğrulama Deneyin
+                        </a>
+                    </div>
+                </div>
             </div>
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to document cards
+    const documentCards = document.querySelectorAll('.glass-card');
+    documentCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+            this.style.boxShadow = '0 20px 40px rgba(31, 38, 135, 0.5)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 8px 32px rgba(31, 38, 135, 0.37)';
+        });
+    });
+
+    // Animate hash displays
+    const hashElements = document.querySelectorAll('.ipfs-hash');
+    hashElements.forEach(element => {
+        element.addEventListener('click', function() {
+            // Copy to clipboard functionality could be added here
+            this.style.background = 'rgba(79, 172, 254, 0.3)';
+            setTimeout(() => {
+                this.style.background = 'rgba(102, 126, 234, 0.2)';
+            }, 200);
+        });
+    });
+});
+</script>
 {% endblock %}
