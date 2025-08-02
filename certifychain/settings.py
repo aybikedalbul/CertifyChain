@@ -1,4 +1,5 @@
 from pathlib import Path
+from decouple import config
 import os   
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -118,3 +119,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Media files (yüklenen dosyalar için)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Pinata API Settings
+PINATA_JWT = config('PINATA_JWT')
+PINATA_API_KEY = config('PINATA_API_KEY')
+PINATA_API_SECRET = config('PINATA_API_SECRET')

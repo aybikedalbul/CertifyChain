@@ -1,8 +1,9 @@
-import re
+import requests
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
 from django.http import JsonResponse
 from .models import Document
 from .forms import DocumentUploadForm, DocumentVerifyForm
@@ -17,17 +18,24 @@ def upload_document(request):
             document.uploaded_by = request.user
             document.save()
             
-            # 2. Gerçek IPFS'e yükle
+            # Pinata API'sini kullanarak dosyayı yükle
             try:
-                import ipfshttpclient
-                client = ipfshttpclient.connect()  # Bilgisayarındaki node'a bağlanır
-                result = client.add(document.file.path)  # Dosyayı IPFS'e yükler
-                document.ipfs_hash = result['Hash']      # Hash'i kaydeder
-                document.save()
-                messages.success(request, f'Belge başarıyla yüklendi! Hash: {document.file_hash[:16]}... IPFS: {result['Hash'][:16]}...')
+                url = "https://api.pinata.cloud/pinning/pinFileToIPFS"
+                headers = {"Authorization": f"Bearer {settings.PINATA_JWT}"}
+
+                with open(document.file.path, 'rb') as file_data:
+                    files = {"file": file_data}
+                    response = requests.post(url, files=files, headers=headers)
+                
+                if response.status_code == 200:
+                    ipfs_hash = response.json()["IpfsHash"]
+                    document.ipfs_hash = ipfs_hash
+                    document.save()
+                    messages.success(request, f'Belge başarıyla yüklendi! Hash: {document.file_hash[:16]}... IPFS: {ipfs_hash[:16]}...')
+                else:
+                        messages.warning(request, f'Belge yüklendi ama Pinata\'ya yüklenemedi. Status Code: {response.status_code}, Mesaj: {response.text}')
             except Exception as e:
-                messages.warning(request, f'Belge yüklendi ama IPFS\'e yüklenemedi. Hata: {e}')
-            
+                messages.warning(request, f'Belge yüklendi ama Pinata\'ya yüklenemedi. Hata: {e}')
             return redirect('documents:document_list')
     else:
         form = DocumentUploadForm()

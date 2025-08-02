@@ -21,6 +21,7 @@
                             <th>Dosya</th>
                             <th>Hash</th>
                             <th>Boyut</th>
+                            <th>IPFS Linki</th>
                             <th>Yükleme Tarihi</th>
                         </tr>
                     </thead>
@@ -31,6 +32,17 @@
                             <td>{{ document.file.name|slice:"10:" }}</td>
                             <td>
                                 <code class="text-muted">{{ document.file_hash|slice:":16" }}...</code>
+                            </td>
+                            <td>
+                                {% if document.ipfs_hash %}
+                                    <a href="https://gateway.pinata.cloud/ipfs/{{ document.ipfs_hash }}" 
+                                       target="_blank" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> IPFS'te Görüntüle
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Yüklenmedi</span>
+                                {% endif %}
                             </td>
                             <td>{{ document.file_size|filesizeformat }}</td>
                             <td>{{ document.uploaded_at|date:"d/m/Y H:i" }}</td>
